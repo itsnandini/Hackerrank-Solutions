@@ -1,0 +1,60 @@
+###An interesting data structure
+Write a data structure in the language of your choice. The data structure should have the following methods. 
+1. add(element): adds an element to the dataset if the element is absent. 
+2. get_random(): returns a random element with an equal probability distribution
+3. exists(element): returns true if the element exists else, false 
+4. delete(element): delete the element if element exists 
+All the methods should have a complexity of O(1), i.e. constant order complexity.
+Additional Considerations: You can use random libraries (like Math.random() or random.random() if you want to). 
+You can use common data structures like list, map, set et al. available in all std programming languages if you want to.
+
+###Solution
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
+public class ConstantTimeDataStructure<T> {
+    private ArrayList<T> elements; //to store the elements in the data structure.
+    private HashMap<T, Integer> elementIndexMap; //maps each element to its index 
+    private Random random; //generate random indices for retrieving random elements.
+
+    public ConstantTimeDataStructure() { // constructor, initialises the variables
+        elements = new ArrayList<>();
+        elementIndexMap = new HashMap<>();
+        random = new Random();
+    }
+
+    public void add(T element) { //adds element
+        if (!elementIndexMap.containsKey(element)) { // which is not already present
+            elementIndexMap.put(element, elements.size()); // adds element
+            elements.add(element); // adds its corresponding index
+        }
+    }
+
+    public T get_random() { //get random element 
+        if (elements.isEmpty()) {
+            throw new IllegalStateException("Data structure is empty");
+        }
+        int randomIndex = random.nextInt(elements.size()); //gets random index between 0 and size-1
+        return elements.get(randomIndex); //return element present at that index
+    }
+
+
+    public boolean exists(T element) {
+        return elementIndexMap.containsKey(element); //returns true or false
+    }
+
+    public void delete(T element) {
+        if (elementIndexMap.containsKey(element)) { //check if element exists
+            int indexToRemove = elementIndexMap.get(element); //gets its index
+            elementIndexMap.remove(element); //removes element
+
+            T lastElement = elements.get(elements.size() - 1); //gets index of last element
+            elements.set(indexToRemove, lastElement); //overwrites element with last element 
+            elements.remove(elements.size() - 1); //remove last element from the rear
+
+            elementIndexMap.put(lastElement, indexToRemove); //update index
+        }
+    }
+
+   }
